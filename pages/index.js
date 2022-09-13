@@ -1,8 +1,55 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.css'
+import Head from "next/head";
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import styles from "../styles/Home.module.css";
+import { ref, set } from "firebase/database";
+import { db } from "../utils/fire";
 
 export default function Home() {
+  const [location, setLocation] = useState({
+    lat: "",
+    long: "",
+  });
+
+  function writeUserData({ lat, long }) {
+    // const db = getDatabase();
+
+    // if (lat && long)
+    set(ref(db, "locations/" + "62"), {
+      latitude: lat,
+      longitude: long,
+    });
+    console.log("called");
+  }
+
+  useEffect(() => {
+    writeUserData(location);
+  }, [location]);
+
+  useEffect(() => {
+    if ("geolocation" in navigator) {
+      console.log("Available");
+    } else {
+      console.log("Not Available");
+    }
+
+    navigator.geolocation.watchPosition(
+      function (position) {
+        console.log("Latitude is :", position.coords.latitude);
+        console.log("Longitude is :", position.coords.longitude);
+        setLocation({
+          lat: position.coords.latitude,
+          long: position.coords.longitude,
+        });
+      },
+      function (error) {
+        console.error("Error Code = " + error.code + " - " + error.message);
+      }
+    );
+  }, []);
+
+  console.log(location);
+
   return (
     <div className={styles.container}>
       <Head>
@@ -17,7 +64,7 @@ export default function Home() {
         </h1>
 
         <p className={styles.description}>
-          Get started by editing{' '}
+          Get started by editing{" "}
           <code className={styles.code}>pages/index.js</code>
         </p>
 
@@ -58,12 +105,12 @@ export default function Home() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Powered by{' '}
+          Powered by{" "}
           <span className={styles.logo}>
             <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
           </span>
         </a>
       </footer>
     </div>
-  )
+  );
 }
