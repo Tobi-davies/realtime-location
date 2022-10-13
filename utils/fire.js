@@ -2,6 +2,7 @@
 import { initializeApp } from "firebase/app";
 import { getDatabase } from "firebase/database";
 
+//firbase configurations
 const firebaseConfig = {
   apiKey: "AIzaSyBAXHeGCjg1vIqzqq3Ng1Q2ZJb0SN7BGWY",
   authDomain: "fir-maps-ff16f.firebaseapp.com",
